@@ -34,6 +34,12 @@ export const heroesAdd = (id, name, description, element) => {
   };
 };
 
+export const filtersFetching = () => {
+  return {
+    type: "FILTERS_FETCHING",
+  };
+};
+
 export const filtersFetched = (filters) => {
   return {
     type: "FILTERS_FETCHED",
@@ -41,10 +47,9 @@ export const filtersFetched = (filters) => {
   };
 };
 
-export const filtration = (filter) => {
+export const filtersFetchingError = () => {
   return {
-    type: "FILTRATION",
-    payload: filter,
+    type: "FILTERS_FETCHING_ERROR",
   };
 };
 

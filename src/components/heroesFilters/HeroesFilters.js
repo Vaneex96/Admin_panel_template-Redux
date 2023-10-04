@@ -7,22 +7,20 @@
 
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { filtration, changeActiveFilter } from "../../actions";
+import { changeActiveFilter } from "../../actions";
 import classNames from "classnames";
 
 const HeroesFilters = () => {
-  const { filters, heroes, activeFilter, filteredHeroes } = useSelector(
-    (state) => state
-  );
+  const { filters, activeFilter } = useSelector((state) => state.filters);
   const dispatch = useDispatch();
 
   const onFiltration = (filter) => {
-    dispatch(filtration(filter));
+    dispatch(changeActiveFilter(filter));
   };
 
   useEffect(() => {
-    dispatch(filtration(activeFilter));
-  }, [heroes]);
+    onFiltration(activeFilter);
+  }, []);
 
   const Buttons = (arr) => {
     const buttons = arr.map((button, i) => {
@@ -34,7 +32,6 @@ const HeroesFilters = () => {
           key={i}
           onClick={() => {
             onFiltration(button.name);
-            dispatch(changeActiveFilter(button.name));
           }}
           className={btnClass}
         >

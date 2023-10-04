@@ -10,7 +10,12 @@
 import { useHttp } from "../../hooks/http.hook";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { heroesAdd, filtersFetched } from "../../actions";
+import {
+  heroesAdd,
+  filtersFetched,
+  filtersFetching,
+  filtersFetchingError,
+} from "../../actions";
 
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
@@ -24,10 +29,12 @@ const HeroesAddForm = () => {
   useEffect(() => {
     request("http://localhost:3001/filters")
       .then((data) => dispatch(filtersFetched(data)))
-      .catch((error) => console.log(error));
+      .catch((error) => {
+        console.log(error);
+      });
   }, []);
 
-  const { filters } = useSelector((state) => state);
+  const { filters } = useSelector((state) => state.filters);
 
   const Option = (arr) => {
     const options = arr.map((item, i) => {

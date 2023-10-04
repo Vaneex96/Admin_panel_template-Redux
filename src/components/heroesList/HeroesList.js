@@ -1,6 +1,7 @@
 import { useHttp } from "../../hooks/http.hook";
 import { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { createSelector } from "reselect";
 
 import {
   heroesFetching,
@@ -17,9 +18,22 @@ import Spinner from "../spinner/Spinner";
 // Удаление идет и с json файла при помощи метода DELETE
 
 const HeroesList = () => {
-  const { heroes, heroesLoadingStatus, filteredHeroes } = useSelector(
-    (state) => state
+  const filteredHeroesSelector = createSelector(
+    (state) => state.filters.activeFilter,
+    (state) => state.heroes.heroes,
+    (filter, heroes) => {
+      console.log("render");
+      if (filter === "all") {
+        return heroes;
+      } else {
+        return heroes.filter((item) => item.element === filter);
+      }
+    }
   );
+
+  const filteredHeroes = useSelector(filteredHeroesSelector);
+
+  const heroesLoadingStatus = useSelector((state) => state.heroesLoadingStatus);
   const dispatch = useDispatch();
   const { request } = useHttp();
 
@@ -34,11 +48,14 @@ const HeroesList = () => {
     // eslint-disable-next-line
   }, []);
 
-  const heroesDelete = useCallback((id) => {
-    request(`http://localhost:3001/heroes/${id}`, "DELETE")
-      .then(() => dispatch(heroesDeleted(id)))
-      .catch((err) => console.log(err));
-  });
+  const heroesDelete = useCallback(
+    (id) => {
+      request(`http://localhost:3001/heroes/${id}`, "DELETE")
+        .then(() => dispatch(heroesDeleted(id)))
+        .catch((err) => console.log(err));
+    },
+    [request]
+  );
 
   if (heroesLoadingStatus === "loading") {
     return <Spinner />;

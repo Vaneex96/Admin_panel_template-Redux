@@ -17,6 +17,12 @@
       "name": "Морской герой",
       "description": "Как аквамен, но не из DC",
       "element": "water"
+    },
+    {
+      "id": "bc102835-e044-42ed-b364-d422d0d691b1",
+      "name": "CAPTAIN MIDLANDS",
+      "description": "hgtrhgfhfdhfd",
+      "element": "wind"
     }
   ],
   "filters": [
