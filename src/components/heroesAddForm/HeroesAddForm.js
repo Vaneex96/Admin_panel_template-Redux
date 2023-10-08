@@ -8,14 +8,8 @@
 // Элементы <option></option> желательно сформировать на базе
 // данных из фильтров
 import { useHttp } from "../../hooks/http.hook";
-import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  heroesAdd,
-  filtersFetched,
-  filtersFetching,
-  filtersFetchingError,
-} from "../../actions";
+import { heroesAdd } from "../heroesList/heroesSlice";
 
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
@@ -25,14 +19,6 @@ import { v4 as uuidv4 } from "uuid";
 const HeroesAddForm = () => {
   const dispatch = useDispatch();
   const { request } = useHttp();
-
-  useEffect(() => {
-    request("http://localhost:3001/filters")
-      .then((data) => dispatch(filtersFetched(data)))
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);
 
   const { filters } = useSelector((state) => state.filters);
 
@@ -66,19 +52,14 @@ const HeroesAddForm = () => {
       })}
       onSubmit={(values) => {
         const id = uuidv4();
-        request(
-          `http://localhost:3001/heroes`,
-          "POST",
-          JSON.stringify({
-            id: id,
-            name: values.name,
-            description: values.text,
-            element: values.element,
-          })
-        )
-          .then(() =>
-            dispatch(heroesAdd(id, values.name, values.text, values.element))
-          )
+        const hero = {
+          id: id,
+          name: values.name,
+          description: values.text,
+          element: values.element,
+        };
+        request(`http://localhost:3001/heroes`, "POST", JSON.stringify(hero))
+          .then(() => dispatch(heroesAdd(hero)))
           .then(() => {
             values.name = "";
             values.text = "";
